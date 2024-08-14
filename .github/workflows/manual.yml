@@ -1,0 +1,39 @@
+name: Manual Test Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_tests:
+        description: 'Choose the tests to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - 'all'
+          - 'test_compare_stock_symbols'
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
+      run: |
+         pip install selenium pytest webdriver-manager
+
+    - name: Run tests
+      run: |
+        if [ "${{ github.event.inputs.run_tests }}" == "all" ]; then
+          pytest tests/
+        elif [ "${{ github.event.inputs.run_tests }}" == "test_compare_stock_symbols" ]; then
+          pytest tests/test_finance_page.py::TestFinance::test_title
+          pytest tests/test_finance_page.py::TestFinance::test_compare_stock_symbols
+        fi
