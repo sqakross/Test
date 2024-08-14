@@ -1,0 +1,12 @@
+# created by virtualenv automatically
+.pytest_cache/
+venv/
+*.log
+*.tmp
+.idea/
+*.iml
+screenshots/
+allure-results/
+allure-report/
+
+
