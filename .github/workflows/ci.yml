@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
+      run: |
+        pip install selenium pytest
+
+    - name: Run full test suite
+      run: |
+        pytest tests/
+    - name: Run specific test cases
+      if: github.event_name == 'workflow_dispatch'
+      run: |
+        pytest tests/test_finance_page.py::TestFinance::test_stock_symbols_comparison
